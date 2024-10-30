@@ -6,6 +6,57 @@
 	<title>Página contacto</title>
 </head>
 <body>
+	<!--Ejercicio 3: Formulario-->
+	<form action="https://www.w3schools.com/action_page.php">
+		<fieldset>
+			<legend>Receta</legend>
+
+			<label for="nombre">Nombre: </label>
+			<input type="text" name="nombre" id="nombre"></br>
+
+			<label for="email">Email: </label>
+			<input type="email" name="email" id="email"></br>
+
+			<label>Momento: </label>
+			<input type="checkbox" name="momento[]" value="desayuno"> Desayuno
+			<input type="checkbox" name="momento[]" value="almuerzo"> Almuerzo
+			<input type="checkbox" name="momento[]" value="merienda"> Merienda
+			<input type="checkbox" name="momento[]" value="cena"> Cena
+			<input type="checkbox" name="momento[]" value="postre"> Postre<br>
+
+			<label>Ingredientes</label>
+			<select name="ingredientes" multiple>
+				<option></option>
+				<optgroup label="carne">
+					<option>Pollo</option>
+					<option>Cerdo</option>
+					<option>Vaca</option>
+				</optgroup>
+
+				<optgroup label="pescado">
+					<option>Gambas</option>
+					<option>Bacalao</option>
+					<option>Pez espada</option>
+				</optgroup>
+
+				<optgroup label="verdura">
+					<option>Pepino</option>
+					<option>Col</option>
+					<option>Pimiento</option>
+				</optgroup>
+			</select><br>
+
+			<label>Tiempo de preparación aproximado: </label><br>
+			<input type="radio" name="horas" value="0h"> 0h
+			<input type="radio" name="horas" value="1h"> 1h
+			<input type="radio" name="horas" value="2h"> 2h <br>
+			<input type="radio" name="minutos" value="0min"> 0 minutos
+			<input type="radio" name="minutos" value="15min"> 15 minutos
+			<input type="radio" name="minutos" value="20min"> 30 minutos
+			<input type="radio" name="minutos" value="45min"> 45 minutos
+		</fieldset><br>
+		<input type="submit" name="enviar" value="Enviar">
+	</form>
 
 	<!--Ejercicio 4: Enlace al índice de la página-->
 	<a href="../index.html">Inicio</a>
