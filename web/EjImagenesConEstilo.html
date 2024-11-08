@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Ejercicio Imágenes con estilo</title>
+	<style type="text/css">
+		div {
+			height: 200px;
+			width: 200px;
+		}
+		.div {
+			background-image: url(../img/estrella.png);
+			background-size: 50px 50px;
+			border: 5px solid;
+		}
+
+		#div1 {
+			background-position: center center;
+			border-color: red;
+			background-repeat: no-repeat;
+		}
+
+		#div2 {
+			background-position: left bottom;
+			border-color: blue;
+			background-repeat: repeat-x;
+		}
+
+		#div3 {
+			background-position: right top;
+			border-color: green;
+			background-repeat: repeat-y;
+		}
+	</style>
+</head>
+<body>
+	<h1>CSS: Ejercicio 2</h1>
+	<div class="div" id="div1">
+	</div>
+
+	<div class="div" id="div2">
+	</div>
+
+	<div class="div" id="div3">
+	</div>
+</body>
+</html>
