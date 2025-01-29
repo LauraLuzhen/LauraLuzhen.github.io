@@ -21,20 +21,17 @@
         }
         label, input, button {
             display: block;
-            margin: 10px 0;
-            width: 100%;
-        }
-        input, button {
-            padding: 10px;
+            width: 50%;
         }
         button {
-            background-color: #4CAF50;
+            background-color: #000000;
             color: white;
             border: none;
             cursor: pointer;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #FFFFFF;
+            color: black;
         }
     </style>
 </head>
@@ -47,20 +44,19 @@
 
     <div id="result">
         <h2>Información de la IP</h2>
-        <p><strong>IP:</strong> <span id="ip"></span></p>
-        <p><strong>Tipo:</strong> <span id="type"></span></p>
-        <p><strong>Continente:</strong> <span id="continent"></span></p>
-        <p><strong>País:</strong> <span id="country"></span></p>
-        <p><strong>Región:</strong> <span id="region"></span></p>
-        <p><strong>Ciudad:</strong> <span id="city"></span></p>
-        <p><strong>Latitud:</strong> <span id="latitude"></span></p>
-        <p><strong>Longitud:</strong> <span id="longitude"></span></p>
-        <p><strong>Código Postal:</strong> <span id="postal"></span></p>
+        <p><b>IP:</b> <span id="ip"></span></p>
+        <p><b>Tipo:</b> <span id="type"></span></p>
+        <p><b>Continente:</b> <span id="continent"></span></p>
+        <p><b>País:</b> <span id="country"></span></p>
+        <p><b>Región:</b> <span id="region"></span></p>
+        <p><b>Ciudad:</b> <span id="city"></span></p>
+        <p><b>Latitud:</b> <span id="latitude"></span></p>
+        <p><b>Longitud:</b> <span id="longitude"></span></p>
+        <p><b>Código Postal:</b> <span id="postal"></span></p>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-        
         function obtenerInformacionIP(ip) {
             $.get(`https://ipwho.is/${ip}`)
                 .done(function(data) {
