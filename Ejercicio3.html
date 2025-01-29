@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta IP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        label, input, button {
+            display: block;
+            margin: 10px 0;
+            width: 100%;
+        }
+        input, button {
+            padding: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Consulta de Información de IP</h1>
+    <label for="ipInput">Introduce la IP (IPv4 o IPv6):</label>
+    <input type="text" id="ipInput" placeholder="Ej: 8.8.8.8">
+    <button type="button" id="enviarBtn">Enviar</button>
+
+    <div id="result" style="display: none;">
+        <h2>Información de la IP</h2>
+        <p><strong>IP:</strong> <span id="ip"></span></p>
+        <p><strong>Tipo:</strong> <span id="type"></span></p>
+        <p><strong>Continente:</strong> <span id="continent"></span></p>
+        <p><strong>País:</strong> <span id="country"></span></p>
+        <p><strong>Región:</strong> <span id="region"></span></p>
+        <p><strong>Ciudad:</strong> <span id="city"></span></p>
+        <p><strong>Latitud:</strong> <span id="latitude"></span></p>
+        <p><strong>Longitud:</strong> <span id="longitude"></span></p>
+        <p><strong>Código Postal:</strong> <span id="postal"></span></p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        // Función para obtener la información de la IP
+        function obtenerInformacionIP(ip) {
+            $.get(`https://ipwho.is/${ip}`)
+                .done(function(data) {
+                    if (data.success) {
+                        // Mostrar la información de la IP en la página
+                        $("#result").show();
+                        $("#ip").text(data.ip);
+                        $("#type").text(data.type);
+                        $("#continent").text(data.continent_name);
+                        $("#country").text(data.country_name);
+                        $("#region").text(data.region);
+                        $("#city").text(data.city);
+                        $("#latitude").text(data.latitude);
+                        $("#longitude").text(data.longitude);
+                        $("#postal").text(data.postal);
+                    } else {
+                        alert("Error: No se pudo obtener la información de la IP.");
+                    }
+                })
+                .fail(function(xhr, status, error) {
+                    alert(`Error al realizar la solicitud: ${xhr.status} - ${error}`);
+                });
+        }
+
+        // Evento al hacer clic en el botón
+        $("#enviarBtn").click(function() {
+            const ip = $("#ipInput").val().trim(); // Obtener IP ingresada
+            if (ip) {
+                obtenerInformacionIP(ip); // Llamar a la función con la IP ingresada
+            } else {
+                alert("Por favor, ingrese una dirección IP válida.");
+            }
+        });
+    </script>
+</body>
+</html>
