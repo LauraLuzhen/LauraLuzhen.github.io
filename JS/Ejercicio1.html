@@ -19,6 +19,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: white;
+            display: none;
         }
         label, button {
             display: block;
@@ -31,11 +32,19 @@
             cursor: pointer;
             margin: 5px;
             border-radius: 5px;
-            padding: 5px    ;
+            padding: 5px;
         }
         button:hover {
             background-color: #FFFFFF;
             color: black;
+        }
+        a {
+            color: #1b8473;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -56,7 +65,7 @@
         <p><b>Ciudad:</b> <span id="city"></span></p>
         <p><b>Latitud:</b> <span id="latitude"></span></p>
         <p><b>Longitud:</b> <span id="longitude"></span></p>
-        <p><b>Código Postal:</b> <span id="postal"></span></p>
+        <p><b>Ver en Google Maps:</b> <a id="mapsLink" href="#" target="_blank">Abrir ubicación</a></p>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -65,7 +74,6 @@
             $.get(`https://ipwho.is/${ip}`)
                 .done(function(data) {
                     if (data.success) {
-                        
                         $("#result").show();
                         $("#ip").text(data.ip);
                         $("#type").text(data.type);
@@ -75,7 +83,10 @@
                         $("#city").text(data.city);
                         $("#latitude").text(data.latitude);
                         $("#longitude").text(data.longitude);
-                        $("#postal").text(data.postal);
+                        
+                        // Actualizar el enlace de Google Maps
+                        let mapsUrl = `https://www.google.com/maps?q=${data.latitude},${data.longitude}`;
+                        $("#mapsLink").attr("href", mapsUrl);
                     } else {
                         alert("No se pudo obtener la información de la IP.");
                     }
@@ -85,7 +96,6 @@
                 });
         }
 
-        
         $("#enviarBtn").click(function() {
             const ip = $("#ipInput").val().trim(); 
             if (ip) {
