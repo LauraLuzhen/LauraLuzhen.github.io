@@ -3,106 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta IP</title>
+    <title>Perros Aleatorios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #b0e3d2;
-        }
-        h1 {
-            text-align: center;
-        }
-        #result {
-            margin-top: 20px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: white;
-            display: none;
-        }
-        label, button {
-            display: block;
-            width: 50%;
-        }
-        button {
-            background-color: #1b8473;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin: 5px;
-            border-radius: 5px;
-            padding: 5px;
-        }
-        button:hover {
-            background-color: #FFFFFF;
-            color: black;
-        }
-        a {
-            color: #1b8473;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
+        body { text-align: center; padding: 20px; }
+        img { max-width: 100%; height: auto; margin-top: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
 <body>
+    <h1 class="mb-4">Galería de Perros</h1>
+    <button id="randomDog" class="btn btn-primary mb-3">Perro Aleatorio</button>
+    <select id="dogSelector" class="form-select mb-3"></select>
+    <img id="dogImage" src="" alt="Imagen de perro" class="img-fluid">
 
-    <h1>Consulta de Información de IP</h1>
-    <label for="ipInput">Introduce la IP (IPv4 o IPv6):</label>
-    <input type="text" id="ipInput" placeholder="Ej: 8.8.4.4">
-    <button type="button" id="enviarBtn">Enviar</button>
-
-    <div id="result">
-        <h2>Información de la IP</h2>
-        <p><b>IP:</b> <span id="ip"></span></p>
-        <p><b>Tipo:</b> <span id="type"></span></p>
-        <p><b>Continente:</b> <span id="continent"></span></p>
-        <p><b>País:</b> <span id="country"></span></p>
-        <p><b>Región:</b> <span id="region"></span></p>
-        <p><b>Ciudad:</b> <span id="city"></span></p>
-        <p><b>Latitud:</b> <span id="latitude"></span></p>
-        <p><b>Longitud:</b> <span id="longitude"></span></p>
-        <p><b>Ver en Google Maps:</b> <a id="mapsLink" href="#" target="_blank">Abrir ubicación</a></p>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-        function obtenerInformacionIP(ip) {
-            $.get(`https://ipwho.is/${ip}`)
-                .done(function(data) {
-                    if (data.success) {
-                        $("#result").show();
-                        $("#ip").text(data.ip);
-                        $("#type").text(data.type);
-                        $("#continent").text(data.continent);
-                        $("#country").text(data.country);
-                        $("#region").text(data.region);
-                        $("#city").text(data.city);
-                        $("#latitude").text(data.latitude);
-                        $("#longitude").text(data.longitude);
+        $(document).ready(function() {
+            function cargarListaRazas() {
+                $.get("https://dog.ceo/api/breeds/list/all")
+                    .done(function(data) {
+                        let breeds = data.message;
+                        let $selector = $("#dogSelector");
+                        $selector.append('<option value="">Seleccione una raza</option>');
                         
-                        // Actualizar el enlace de Google Maps
-                        let mapsUrl = `https://www.google.com/maps?q=${data.latitude},${data.longitude}`;
-                        $("#mapsLink").attr("href", mapsUrl);
-                    } else {
-                        alert("No se pudo obtener la información de la IP.");
-                    }
-                })
-                .fail(function(xhr, status, error) {
-                    alert(`Error al realizar la solicitud: ${xhr.status} - ${error}`);
-                });
-        }
-
-        $("#enviarBtn").click(function() {
-            const ip = $("#ipInput").val().trim(); 
-            if (ip) {
-                obtenerInformacionIP(ip); 
-            } else {
-                alert("Ingrese una dirección IP válida.");
+                        for (let breed in breeds) {
+                            if (breeds[breed].length > 0) {
+                                breeds[breed].forEach(subBreed => {
+                                    let fullBreed = `${breed}/${subBreed}`;
+                                    $selector.append(`<option value="${fullBreed}">${subBreed} ${breed}</option>`);
+                                });
+                            } else {
+                                $selector.append(`<option value="${breed}">${breed}</option>`);
+                            }
+                        }
+                    });
             }
+            
+            function cargarImagen(url) {
+                $("#dogImage").attr("src", url);
+            }
+            
+            $("#randomDog").click(function() {
+                $.get("https://dog.ceo/api/breeds/image/random")
+                    .done(function(data) {
+                        cargarImagen(data.message);
+                    });
+            });
+            
+            $("#dogSelector").change(function() {
+                let breed = $(this).val();
+                if (breed) {
+                    $.get(`https://dog.ceo/api/breed/${breed}/images/random`)
+                        .done(function(data) {
+                            cargarImagen(data.message);
+                        });
+                }
+            });
+            
+            cargarListaRazas();
         });
     </script>
 </body>
