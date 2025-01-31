@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualizar IP</title>
+    <title>Consulta IP</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #b4dfd8;
         }
         h1 {
             text-align: center;
@@ -20,15 +19,12 @@
             border: 1px solid #ddd;
             border-radius: 5px;
         }
-        label, button {
+        label, input, button {
             display: block;
             width: 50%;
-            margin: 5px;
-            padding: 5px;
-            border-radius: 5px;
         }
         button {
-            background-color: #1b8473;
+            background-color: #000000;
             color: white;
             border: none;
             cursor: pointer;
@@ -42,9 +38,9 @@
 <body>
 
     <h1>Consulta de Información de IP</h1>
-    <label for="ip">Introduce la IP (IPv4 o IPv6):</label>
-    <input type="text" id="ip" placeholder="Ej: 10.10.10.10">
-    <button type="button" id="enviar">Enviar</button>
+    <label for="ipInput">Introduce la IP (IPv4 o IPv6):</label>
+    <input type="text" id="ipInput" placeholder="Ej: 8.8.8.8">
+    <button type="button" id="enviarBtn">Enviar</button>
 
     <div id="result">
         <h2>Información de la IP</h2>
@@ -86,8 +82,8 @@
         }
 
         
-        $("#enviar").click(function() {
-            const ip = $("#ip").val().trim(); 
+        $("#enviarBtn").click(function() {
+            const ip = $("#ipInput").val().trim(); 
             if (ip) {
                 obtenerInformacionIP(ip); 
             } else {
