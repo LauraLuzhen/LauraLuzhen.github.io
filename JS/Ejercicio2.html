@@ -73,13 +73,12 @@
     		let url = `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${equipo}`;
 			$.get(url)
         	.done(function(data) {
-            if (data.teams && data.teams.length > 0) {
-                let equipoInfo = data.teams[0];
+            if (data.success) {
 
                 $("#informacion").show();
-                $("#nombre").text(equipoInfo.strTeam || "Nombre no encontrado");
-                $("#estadio").text(equipoInfo.strStadium || "Estadio no encontrado");
-                $("#descripcion").text(equipoInfo.strDescriptionEN || "Descripción no encontrada.");
+                $("#nombre").text(data.strTeam);
+                $("#estadio").text(data.strStadium);
+                $("#descripcion").text(data.strDescriptionEN);
 
                 $("#informacion").removeClass("container");
             } else {
