@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipos de la Premier League</title>
+    <title>Información de Equipos de la Premier League</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style type="text/css">
@@ -14,7 +14,7 @@
 }
 
 .container {
-    width: 60%;
+    width: 50%;
     margin: auto;
     background: white;
     padding: 20px;
@@ -45,25 +45,13 @@ input, button {
     margin: 10px 0;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-ul li {
-    padding: 5px;
-    background: #eee;
-    margin: 5px;
-    border-radius: 5px;
-}
-
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Buscar Equipo de la Premier League</h1>
-        <input type="text" id="team-input" placeholder="Ingresa el nombre o código del equipo">
+        <h1>Buscar Equipo</h1>
+        <input type="text" id="team-input" placeholder="Escribe el nombre del equipo">
         <button id="search-btn">Buscar</button>
 
         <div id="team-info" class="hidden">
@@ -73,35 +61,26 @@ ul li {
             <p><strong>Ubicación:</strong> <span id="stadium-location"></span></p>
             <p><strong>Descripción:</strong></p>
             <p id="team-description"></p>
-
-            <h3>Jugadores Destacados</h3>
-            <ul id="players-list"></ul>
-
-            <h3>Últimos Eventos</h3>
-            <ul id="events-list"></ul>
         </div>
     </div>
 
     <script type="text/javascript">
     	$(document).ready(function() {
     $("#search-btn").click(function() {
-        let teamInput = $("#team-input").val().trim();
+        let teamName = $("#team-input").val().trim();
 
-        if (teamInput !== "") {
-            obtenerInfoEquipo(teamInput);
+        if (teamName !== "") {
+            obtenerInfoEquipo(teamName);
         } else {
-            alert("Por favor, ingresa un nombre o código de equipo.");
+            alert("Por favor, ingresa un nombre de equipo.");
         }
     });
 });
 
 function obtenerInfoEquipo(team) {
-    let apiBase = "https://www.thesportsdb.com/api/v1/json/3";
-    
-    // Búsqueda por nombre o código corto
-    let searchUrl = `${apiBase}/searchteams.php?t=${team}`;
+    let url = `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${team}`;
 
-    $.get(searchUrl)
+    $.get(url)
         .done(function(data) {
             if (data.teams && data.teams.length > 0) {
                 let teamData = data.teams[0];
@@ -113,9 +92,6 @@ function obtenerInfoEquipo(team) {
                 $("#team-description").text(teamData.strDescriptionEN || "Descripción no disponible.");
 
                 $("#team-info").removeClass("hidden");
-
-                obtenerJugadores(teamData.strTeam);
-                obtenerEventos(teamData.strTeam);
             } else {
                 alert("No se encontró información del equipo.");
             }
@@ -123,48 +99,6 @@ function obtenerInfoEquipo(team) {
         .fail(function(xhr, status, error) {
             console.log(`Error: ${xhr.status} - ${error}`);
             alert("Hubo un problema al obtener la información.");
-        });
-}
-
-function obtenerJugadores(team) {
-    let apiBase = "https://www.thesportsdb.com/api/v1/json/3";
-    let playersUrl = `${apiBase}/searchplayers.php?t=${team}`;
-
-    $.get(playersUrl)
-        .done(function(data) {
-            $("#players-list").empty();
-
-            if (data.player) {
-                data.player.forEach(player => {
-                    $("#players-list").append(`<li>${player.strPlayer} - ${player.strPosition || "Posición desconocida"}</li>`);
-                });
-            } else {
-                $("#players-list").append("<li>No hay jugadores disponibles.</li>");
-            }
-        })
-        .fail(function(xhr, status, error) {
-            console.log(`Error: ${xhr.status} - ${error}`);
-        });
-}
-
-function obtenerEventos(team) {
-    let apiBase = "https://www.thesportsdb.com/api/v1/json/3";
-    let eventsUrl = `${apiBase}/searchevents.php?e=${team}`;
-
-    $.get(eventsUrl)
-        .done(function(data) {
-            $("#events-list").empty();
-
-            if (data.event) {
-                data.event.forEach(event => {
-                    $("#events-list").append(`<li>${event.strEvent} - ${event.dateEvent}</li>`);
-                });
-            } else {
-                $("#events-list").append("<li>No hay eventos recientes.</li>");
-            }
-        })
-        .fail(function(xhr, status, error) {
-            console.log(`Error: ${xhr.status} - ${error}`);
         });
 }
 
