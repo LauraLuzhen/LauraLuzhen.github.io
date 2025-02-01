@@ -85,14 +85,15 @@
 function obtenerInfoEquipo(team) {
     $.get(`https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${team}`)
         .done(function(data) {
-            if (data.teams) {
+            if (data.teams && data.teams.length > 0) {
                 let teamData = data.teams[0];
 
-                $("#team-name").text(teamData.strTeam);
-                $("#team-logo").attr("src", teamData.strTeamBadge);
-                $("#stadium-name").text(teamData.strStadium);
-                $("#stadium-location").text(teamData.strStadiumLocation);
-                $("#team-description").text(teamData.strDescriptionEN || "No hay descripción disponible.");
+                // Verificamos que existan los datos antes de asignarlos
+                $("#team-name").text(teamData.strTeam || "Nombre no disponible");
+                $("#team-logo").attr("src", teamData.strTeamBadge || "https://via.placeholder.com/150");
+                $("#stadium-name").text(teamData.strStadium || "Estadio no disponible");
+                $("#stadium-location").text(teamData.strStadiumLocation || "Ubicación no disponible");
+                $("#team-description").text(teamData.strDescriptionEN || "Descripción no disponible.");
 
                 $("#team-info").removeClass("hidden");
             } else {
@@ -104,6 +105,7 @@ function obtenerInfoEquipo(team) {
             alert("Hubo un problema al obtener la información.");
         });
 }
+
 
     </script>
 </body>
