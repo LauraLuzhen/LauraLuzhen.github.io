@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Consulta IP</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial;
             margin: 20px;
             background-color: #b0e3d2;
         }
         h1 {
             text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            margin: 5px;
         }
         #result {
-            margin-top: 20px;
             padding: 20px;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -23,16 +26,15 @@
         }
         label, button {
             display: block;
-            width: 50%;
+            width: 30%;
         }
         button {
             background-color: #1b8473;
             color: white;
             border: none;
-            cursor: pointer;
             margin: 5px;
             border-radius: 5px;
-            padding: 5px;
+            padding: 15px;
         }
         button:hover {
             background-color: #FFFFFF;
@@ -50,13 +52,14 @@
 </head>
 <body>
 
-    <h1>Consulta de Información de IP</h1>
-    <label for="ipInput">Introduce la IP (IPv4 o IPv6):</label>
-    <input type="text" id="ipInput" placeholder="Ej: 8.8.4.4">
-    <button type="button" id="enviarBtn">Enviar</button>
+    <h1>Consulta la IP</h1>
 
-    <div id="result">
-        <h2>Información de la IP</h2>
+    <label for="input">Introduce la IP (IPv4 o IPv6):</label>
+    <input type="text" id="input" placeholder="Ej: 8.8.4.4">
+    <button type="button" id="enviar">Enviar</button>
+
+    <div id="resultado">
+        <h2>Información de la IP:</h2>
         <p><b>IP:</b> <span id="ip"></span></p>
         <p><b>Tipo:</b> <span id="type"></span></p>
         <p><b>Continente:</b> <span id="continent"></span></p>
@@ -64,17 +67,18 @@
         <p><b>Región:</b> <span id="region"></span></p>
         <p><b>Ciudad:</b> <span id="city"></span></p>
         <p><b>Latitud:</b> <span id="latitude"></span></p>
-        <p><b>Longitud:</b> <span id="longitude"></span></p>
-        <p><b>Ver IP en Google Maps:</b> <a id="mapaLink" href="#" target="_blank">Abrir</a></p>
+        <p><b>Altitud:</b> <span id="longitude"></span></p>
+        <p><b>Ver IP en Google Maps:</b><a id="mapaLink" href="#" target="_blank">Abrir ubicación</a></p>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
+
         function obtenerInformacionIP(ip) {
             $.get(`https://ipwho.is/${ip}`)
                 .done(function(data) {
                     if (data.success) {
-                        $("#result").show();
+                        $("#resultado").show();
                         $("#ip").text(data.ip);
                         $("#type").text(data.type);
                         $("#continent").text(data.continent);
@@ -84,8 +88,8 @@
                         $("#latitude").text(data.latitude);
                         $("#longitude").text(data.longitude);
                         
-                        let mapaUrl = `https://www.google.com/maps?q=${data.latitude},${data.longitude}`;
-                        $("#mapaLink").attr("href", mapaUrl);
+                        let mapaUbicacion = `https://www.google.com/maps?q=${data.latitude},${data.longitude}`;
+                        $("#mapaLink").attr("href", mapaUbicacion);
                     } else {
                         alert("No se pudo obtener la información de la IP.");
                     }
@@ -95,8 +99,8 @@
                 });
         }
 
-        $("#enviarBtn").click(function() {
-            const ip = $("#ipInput").val().trim(); 
+        $("#enviar").click(function() {
+            let ip = $("#input").val().trim(); 
             if (ip) {
                 obtenerInformacionIP(ip); 
             } else {
