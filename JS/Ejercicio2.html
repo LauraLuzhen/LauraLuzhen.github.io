@@ -1,63 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipos de la Premier League</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style type="text/css">
     	body {
-    		font-family: Arial, sans-serif;
-   	 		text-align: center;
-		    background-color: #f4f4f4;
-		}
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+}
 
-		.container {
-    		width: 50%;
-		    margin: auto;
-	   		background: white;
-   		 	padding: 20px;
-    		border-radius: 10px;
-    		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-		}
+.container {
+    width: 60%;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
 
-		select {
-    		padding: 10px;
-		    font-size: 16px;
-		}
+input, button {
+    padding: 10px;
+    font-size: 16px;
+    margin: 10px;
+}
 
-		#team-info {
-		    margin-top: 20px;
-		    padding: 15px;
-		    border: 1px solid #ddd;
-		    border-radius: 8px;
-		    background: #fff;
-		}
+#team-info {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+}
 
-		.hidden {
-    		display: none;
-		}
+.hidden {
+    display: none;
+}
 
-		#team-logo {
-    		width: 150px;
-		    margin: 10px 0;
-		}
+#team-logo {
+    width: 150px;
+    margin: 10px 0;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    padding: 5px;
+    background: #eee;
+    margin: 5px;
+    border-radius: 5px;
+}
+
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Selecciona un Equipo de la Premier League</h1>
-        <select id="team-select">
-            <option value="">-- Elige un equipo --</option>
-            <option value="Chelsea">Chelsea</option>
-            <option value="Manchester United">Manchester United</option>
-            <option value="Liverpool">Liverpool</option>
-            <option value="Arsenal">Arsenal</option>
-            <option value="Manchester City">Manchester City</option>
-            <option value="Tottenham">Tottenham</option>
-        </select>
+        <h1>Buscar Equipo de la Premier League</h1>
+        <input type="text" id="team-input" placeholder="Ingresa el nombre o código del equipo">
+        <button id="search-btn">Buscar</button>
 
         <div id="team-info" class="hidden">
             <h2 id="team-name"></h2>
@@ -66,29 +73,39 @@
             <p><strong>Ubicación:</strong> <span id="stadium-location"></span></p>
             <p><strong>Descripción:</strong></p>
             <p id="team-description"></p>
+
+            <h3>Jugadores Destacados</h3>
+            <ul id="players-list"></ul>
+
+            <h3>Últimos Eventos</h3>
+            <ul id="events-list"></ul>
         </div>
     </div>
 
     <script type="text/javascript">
     	$(document).ready(function() {
-    $("#team-select").change(function() {
-        let teamName = $(this).val();
-        
-        if (teamName !== "") {
-            obtenerInfoEquipo(teamName);
+    $("#search-btn").click(function() {
+        let teamInput = $("#team-input").val().trim();
+
+        if (teamInput !== "") {
+            obtenerInfoEquipo(teamInput);
         } else {
-            $("#team-info").addClass("hidden");
+            alert("Por favor, ingresa un nombre o código de equipo.");
         }
     });
 });
 
 function obtenerInfoEquipo(team) {
-    $.get(`https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${team}`)
+    let apiBase = "https://www.thesportsdb.com/api/v1/json/3";
+    
+    // Búsqueda por nombre o código corto
+    let searchUrl = `${apiBase}/searchteams.php?t=${team}`;
+
+    $.get(searchUrl)
         .done(function(data) {
             if (data.teams && data.teams.length > 0) {
                 let teamData = data.teams[0];
 
-                // Verificamos que existan los datos antes de asignarlos
                 $("#team-name").text(teamData.strTeam || "Nombre no disponible");
                 $("#team-logo").attr("src", teamData.strTeamBadge || "https://via.placeholder.com/150");
                 $("#stadium-name").text(teamData.strStadium || "Estadio no disponible");
@@ -96,6 +113,9 @@ function obtenerInfoEquipo(team) {
                 $("#team-description").text(teamData.strDescriptionEN || "Descripción no disponible.");
 
                 $("#team-info").removeClass("hidden");
+
+                obtenerJugadores(teamData.strTeam);
+                obtenerEventos(teamData.strTeam);
             } else {
                 alert("No se encontró información del equipo.");
             }
@@ -106,6 +126,47 @@ function obtenerInfoEquipo(team) {
         });
 }
 
+function obtenerJugadores(team) {
+    let apiBase = "https://www.thesportsdb.com/api/v1/json/3";
+    let playersUrl = `${apiBase}/searchplayers.php?t=${team}`;
+
+    $.get(playersUrl)
+        .done(function(data) {
+            $("#players-list").empty();
+
+            if (data.player) {
+                data.player.forEach(player => {
+                    $("#players-list").append(`<li>${player.strPlayer} - ${player.strPosition || "Posición desconocida"}</li>`);
+                });
+            } else {
+                $("#players-list").append("<li>No hay jugadores disponibles.</li>");
+            }
+        })
+        .fail(function(xhr, status, error) {
+            console.log(`Error: ${xhr.status} - ${error}`);
+        });
+}
+
+function obtenerEventos(team) {
+    let apiBase = "https://www.thesportsdb.com/api/v1/json/3";
+    let eventsUrl = `${apiBase}/searchevents.php?e=${team}`;
+
+    $.get(eventsUrl)
+        .done(function(data) {
+            $("#events-list").empty();
+
+            if (data.event) {
+                data.event.forEach(event => {
+                    $("#events-list").append(`<li>${event.strEvent} - ${event.dateEvent}</li>`);
+                });
+            } else {
+                $("#events-list").append("<li>No hay eventos recientes.</li>");
+            }
+        })
+        .fail(function(xhr, status, error) {
+            console.log(`Error: ${xhr.status} - ${error}`);
+        });
+}
 
     </script>
 </body>
