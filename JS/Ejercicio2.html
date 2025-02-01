@@ -2,106 +2,96 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Información de Equipos de la Premier League</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Información de los equipos de la Premier League</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
     <style type="text/css">
     	body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f4f4f4;
-}
-
-.container {
-    width: 50%;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-input, button {
-    padding: 10px;
-    font-size: 16px;
-    margin: 10px;
-}
-
-#team-info {
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #fff;
-}
-
-.hidden {
-    display: none;
-}
-
-#team-logo {
-    width: 150px;
-    margin: 10px 0;
-}
-
+    		text-align: center;
+            padding: 20px;
+            margin: 20px;
+            font-family: Arial;
+            background-color: #b0e3d2;
+		}
+		.container {
+		    width: 50%;
+		    background: white;
+		    padding: 20px;
+		    border-radius: 10px;
+		    box-shadow: 0px 0px 10px;
+		}
+		input, button {
+		    padding: 15px;
+            font-size: 15px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            width: 10%;
+            background-color: #1b8473;
+            color: white;
+		}
+		button:hover {
+            background-color: #FFFFFF;
+            color: black;
+        }
+		#team-info {
+		    margin-top: 20px;
+		    padding: 15px;
+		    border: 1px solid #ddd;
+		    border-radius: 8px;
+		    background: #fff;
+		}
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Buscar Equipo</h1>
-        <input type="text" id="team-input" placeholder="Escribe el nombre del equipo">
-        <button id="search-btn">Buscar</button>
+    <h1>Información de los equipos de la Premier League<h1>
+    <input type="text" id="input" placeholder="Escribe el nombre del equipo">
+    <button type="buttom" id="enviar">Buscar</button>
 
-        <div id="team-info" class="hidden">
-            <h2 id="team-name"></h2>
-            <img id="team-logo" src="" alt="Escudo del equipo">
-            <p><strong>Estadio:</strong> <span id="stadium-name"></span></p>
-            <p><strong>Ubicación:</strong> <span id="stadium-location"></span></p>
-            <p><strong>Descripción:</strong></p>
-            <p id="team-description"></p>
-        </div>
+    <div id="informacion" class="container">
+        <p><b>Equipo:</b><span id="nombre"></span></p>
+        <p><b>Estadio:</b><span id="estadio"></span></p>
+        <p><b>Descripción:</b></p>
+        <p id="descripcion"></p>
     </div>
 
     <script type="text/javascript">
     	$(document).ready(function() {
-    $("#search-btn").click(function() {
-        let teamName = $("#team-input").val().trim();
+    		$("#enviar").click(function() {
+        		let nombreEquipo = $("#input").val().trim();
+		        if (nombreEquipo !== "") {
+        		    obtenerInfo(nombreEquipo);
+        		} else {
+		            alert("Ingresa un nombre de un equipo de la Premier League");
+        		}
+    		});
+		});
 
-        if (teamName !== "") {
-            obtenerInfoEquipo(teamName);
-        } else {
-            alert("Por favor, ingresa un nombre de equipo.");
-        }
-    });
-});
-
-function obtenerInfoEquipo(team) {
-    let url = `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${team}`;
-
-    $.get(url)
-        .done(function(data) {
+		function obtenerInfo(equipo) {
+    		let url = `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${equipo}`;
+			$.get(url)
+        	.done(function(data) {
             if (data.teams && data.teams.length > 0) {
-                let teamData = data.teams[0];
+                let equipoInfo = data.teams[0];
 
-                $("#team-name").text(teamData.strTeam || "Nombre no disponible");
-                $("#team-logo").attr("src", teamData.strTeamBadge || "https://via.placeholder.com/150");
-                $("#stadium-name").text(teamData.strStadium || "Estadio no disponible");
-                $("#stadium-location").text(teamData.strStadiumLocation || "Ubicación no disponible");
-                $("#team-description").text(teamData.strDescriptionEN || "Descripción no disponible.");
+                $("#nombre").text(equipoInfo.strTeam || "Nombre no encontrado");
+                $("#estadio").text(equipoInfo.strStadium || "Estadio no encontrado");
+                $("descripcion").text(equipoInfo.strDescriptionEN || "Descripción no encontrada.");
 
-                $("#team-info").removeClass("hidden");
+                $("#informacion").removeClass("container");
             } else {
                 alert("No se encontró información del equipo.");
             }
         })
         .fail(function(xhr, status, error) {
             console.log(`Error: ${xhr.status} - ${error}`);
-            alert("Hubo un problema al obtener la información.");
+            alert("Error al obtener la información.");
         });
-}
-
+	}
     </script>
 </body>
 </html>
