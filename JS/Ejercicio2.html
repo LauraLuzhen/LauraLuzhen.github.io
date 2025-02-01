@@ -8,12 +8,17 @@
 
     <style type="text/css">
     	body {
-    		text-align: center;
-            padding: 20px;
+             font-family: Arial;
             margin: 20px;
-            font-family: Arial;
             background-color: #b0e3d2;
 		}
+		h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            margin: 5px;
+        }
 		.container {
 		    width: 50%;
 		    background: white;
@@ -37,20 +42,15 @@
             background-color: #FFFFFF;
             color: black;
         }
-		#team-info {
-		    margin-top: 20px;
-		    padding: 15px;
-		    border: 1px solid #ddd;
-		    border-radius: 8px;
-		    background: #fff;
-		}
     </style>
 </head>
 <body>
 
     <h1>Información de los equipos de la Premier League<h1>
-    <input type="text" id="input" placeholder="Escribe el nombre del equipo">
-    <button type="buttom" id="enviar">Buscar</button>
+
+    <label for="input">Escribe el nombre del equipo: </label>
+    <input type="text" id="input" placeholder="Arsenal">
+    <button type="button" id="enviar">Enviar</button>
 
     <div id="informacion" class="container">
         <p><b>Equipo:</b><span id="nombre"></span></p>
@@ -60,6 +60,7 @@
     </div>
 
     <script type="text/javascript">
+
     	$(document).ready(function() {
     		$("#enviar").click(function() {
         		let nombreEquipo = $("#input").val().trim();
