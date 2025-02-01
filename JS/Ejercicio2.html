@@ -70,26 +70,26 @@
 		});
 
 		function obtenerInfo(equipo) {
-    		let url = `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${equipo}`;
-			$.get(url)
-        	.done(function(data) {
-            if (data.success) {
+            let url = `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${equipo}`;
+            $.get(url)
+                .done(function(data) {
+                    if (data.teams && data.teams.length > 0) {
+                        let info = data.teams[0];  
+                        $("#nombre").text(info.strTeam || "Nombre no encontrado");
+                        $("#estadio").text(info.strStadium || "Estadio no encontrado");
+                        $("#descripcion").text(info.strDescriptionEN || "Descripción no encontrada.");
 
-                $("#informacion").show();
-                $("#nombre").text(data.strTeam);
-                $("#estadio").text(data.strStadium);
-                $("#descripcion").text(data.strDescriptionEN);
-
-                $("#informacion").removeClass("container");
-            } else {
-                alert("No se encontró información del equipo.");
-            }
-        })
-        .fail(function(xhr, status, error) {
-            console.log(`Error: ${xhr.status} - ${error}`);
-            alert("Error al obtener la información.");
-        });
-	}
+                        // Muestra el div de información
+                        $("#informacion").show();
+                    } else {
+                        alert("No se encontró información del equipo.");
+                    }
+                })
+        	.fail(function(xhr, status, error) {
+            	console.log(`Error: ${xhr.status} - ${error}`);
+            	alert("Error al obtener la información.");
+        	});
+		}
     </script>
 </body>
 </html>
