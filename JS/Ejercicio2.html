@@ -1,11 +1,110 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Equipos de la Premier League</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style type="text/css">
+    	body {
+    		font-family: Arial, sans-serif;
+   	 		text-align: center;
+		    background-color: #f4f4f4;
+		}
+
+		.container {
+    		width: 50%;
+		    margin: auto;
+	   		background: white;
+   		 	padding: 20px;
+    		border-radius: 10px;
+    		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+		}
+
+		select {
+    		padding: 10px;
+		    font-size: 16px;
+		}
+
+		#team-info {
+		    margin-top: 20px;
+		    padding: 15px;
+		    border: 1px solid #ddd;
+		    border-radius: 8px;
+		    background: #fff;
+		}
+
+		.hidden {
+    		display: none;
+		}
+
+		#team-logo {
+    		width: 150px;
+		    margin: 10px 0;
+		}
+    </style>
 </head>
 <body>
 
+    <div class="container">
+        <h1>Selecciona un Equipo de la Premier League</h1>
+        <select id="team-select">
+            <option value="">-- Elige un equipo --</option>
+            <option value="Chelsea">Chelsea</option>
+            <option value="Manchester United">Manchester United</option>
+            <option value="Liverpool">Liverpool</option>
+            <option value="Arsenal">Arsenal</option>
+            <option value="Manchester City">Manchester City</option>
+            <option value="Tottenham">Tottenham</option>
+        </select>
+
+        <div id="team-info" class="hidden">
+            <h2 id="team-name"></h2>
+            <img id="team-logo" src="" alt="Escudo del equipo">
+            <p><strong>Estadio:</strong> <span id="stadium-name"></span></p>
+            <p><strong>Ubicación:</strong> <span id="stadium-location"></span></p>
+            <p><strong>Descripción:</strong></p>
+            <p id="team-description"></p>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+    	$(document).ready(function() {
+    $("#team-select").change(function() {
+        let teamName = $(this).val();
+        
+        if (teamName !== "") {
+            obtenerInfoEquipo(teamName);
+        } else {
+            $("#team-info").addClass("hidden");
+        }
+    });
+});
+
+function obtenerInfoEquipo(team) {
+    $.get(`https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${team}`)
+        .done(function(data) {
+            if (data.teams) {
+                let teamData = data.teams[0];
+
+                $("#team-name").text(teamData.strTeam);
+                $("#team-logo").attr("src", teamData.strTeamBadge);
+                $("#stadium-name").text(teamData.strStadium);
+                $("#stadium-location").text(teamData.strStadiumLocation);
+                $("#team-description").text(teamData.strDescriptionEN || "No hay descripción disponible.");
+
+                $("#team-info").removeClass("hidden");
+            } else {
+                alert("No se encontró información del equipo.");
+            }
+        })
+        .fail(function(xhr, status, error) {
+            console.log(`Error: ${xhr.status} - ${error}`);
+            alert("Hubo un problema al obtener la información.");
+        });
+}
+
+    </script>
 </body>
 </html>
