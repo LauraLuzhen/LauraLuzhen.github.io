@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Información de los equipos de la Premier League</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -43,7 +43,7 @@
 </head>
 <body>
 
-    <h1>Información de los equipos de la Premier League<h1>
+    <h1>Información de los equipos de la Premier League</h1>
 
     <label for="input">Escribe el nombre del equipo: </label>
     <input type="text" id="input" placeholder="Arsenal">
@@ -76,6 +76,7 @@
             if (data.teams && data.teams.length > 0) {
                 let equipoInfo = data.teams[0];
 
+                $("#informacion").show();
                 $("#nombre").text(equipoInfo.strTeam || "Nombre no encontrado");
                 $("#estadio").text(equipoInfo.strStadium || "Estadio no encontrado");
                 $("#descripcion").text(equipoInfo.strDescriptionEN || "Descripción no encontrada.");
