@@ -8,7 +8,7 @@
 
     <style type="text/css">
     	body {
-             font-family: Arial;
+            font-family: Arial;
             margin: 20px;
             background-color: #b0e3d2;
 		}
@@ -28,11 +28,7 @@
 		}
 		button {
 		    padding: 15px;
-            font-size: 15px;
-            margin: 10px;
-            border: none;
             border-radius: 5px;
-            cursor: pointer;
             margin: 5px;
             width: 10%;
             background-color: #1b8473;
@@ -81,7 +77,7 @@
 
                 $("#nombre").text(equipoInfo.strTeam || "Nombre no encontrado");
                 $("#estadio").text(equipoInfo.strStadium || "Estadio no encontrado");
-                $("descripcion").text(equipoInfo.strDescriptionEN || "Descripción no encontrada.");
+                $("#descripcion").text(equipoInfo.strDescriptionEN || "Descripción no encontrada.");
 
                 $("#informacion").removeClass("container");
             } else {
