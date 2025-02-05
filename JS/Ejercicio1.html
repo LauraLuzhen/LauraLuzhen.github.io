@@ -2,33 +2,40 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perros Aleatorios</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Página razas de perros</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
         body {
             text-align: center;
             padding: 20px;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            margin: 20px;
+            font-family: Arial;
+            background-color: #b0e3d2;
         }
         h1 {
-            color: #333;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            margin: 5px;
         }
         button, select {
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 15px;
+            font-size: 15px;
             margin: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin: 5px;
+            width: 10%;
         }
         button {
-            background-color: #007BFF;
+            background-color: #1b8473;
             color: white;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #FFFFFF;
+            color: black;
         }
         select {
             background-color: white;
@@ -36,7 +43,6 @@
         }
         img {
             max-width: 80%;
-            height: auto;
             margin-top: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -44,57 +50,60 @@
     </style>
 </head>
 <body>
+
     <h1>Galería de Perros</h1>
-    <button id="randomDog">Perro Aleatorio</button>
-    <select id="dogSelector">
-        <option value="">Seleccione una raza</option>
+
+    <button id="perroRandom">Raza aleatoria</button>
+    <select id="seleccion">
+        <option>Seleccionar</option>
     </select>
     <br>
-    <img id="dogImage" src="" alt="Imagen de perro">
+
+    <img id="imagen" src="" alt="Imagen de perro">
 
     <script>
         $(document).ready(function() {
-            function cargarListaRazas() {
+            function listaRazas() {
                 $.get("https://dog.ceo/api/breeds/list/all")
                     .done(function(data) {
-                        let breeds = data.message;
-                        let $selector = $("#dogSelector");
+                        let razas = data.message;
+                        let selector = $("#seleccion");
                         
-                        for (let breed in breeds) {
-                            if (breeds[breed].length > 0) {
-                                breeds[breed].forEach(subBreed => {
-                                    let fullBreed = `${breed}/${subBreed}`;
-                                    $selector.append(`<option value="${fullBreed}">${subBreed} ${breed}</option>`);
+                        for (let raza in razas) {
+                            if (razas[raza].length > 0) {
+                                razas[raza].forEach(raza2 => {
+                                    let razaEntera = `${raza}/${raza2}`;
+                                    selector.append(`<option value="${razaEntera}">${raza2} ${raza}</option>`);
                                 });
                             } else {
-                                $selector.append(`<option value="${breed}">${breed}</option>`);
+                                selector.append(`<option value="${raza}">${raza}</option>`);
                             }
                         }
                     });
             }
             
-            function cargarImagen(url) {
-                $("#dogImage").attr("src", url);
+            function imgPerro(url) {
+                $("#imagen").attr("src", url);
             }
             
-            $("#randomDog").click(function() {
+            $("#perroRandom").click(function() {
                 $.get("https://dog.ceo/api/breeds/image/random")
                     .done(function(data) {
-                        cargarImagen(data.message);
+                        imgPerro(data.message);
                     });
             });
             
-            $("#dogSelector").change(function() {
-                let breed = $(this).val();
-                if (breed) {
-                    $.get(`https://dog.ceo/api/breed/${breed}/images/random`)
+            $("#seleccion").change(function() {
+                let raza = $(this).val();
+                if (raza) {
+                    $.get(`https://dog.ceo/api/breed/${raza}/images/random`)
                         .done(function(data) {
-                            cargarImagen(data.message);
+                            imgPerro(data.message);
                         });
                 }
             });
             
-            cargarListaRazas();
+            listaRazas();
         });
     </script>
 </body>

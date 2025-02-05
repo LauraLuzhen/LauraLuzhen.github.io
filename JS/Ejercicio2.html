@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Información de los equipos de la Premier League</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style type="text/css">
+    	body {
+            font-family: Arial;
+            margin: 20px;
+            background-color: #b0e3d2;
+        }
+        h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        #informacion {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #FFFFFF;
+            display: none;
+        }
+        button {
+            background-color: #1b8473;
+            color: white;
+            border: none;
+            margin: 5px;
+            border-radius: 5px;
+            padding: 15px;
+            width: 10%;
+        }
+        button:hover {
+            background-color: #FFFFFF;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Información de los equipos de la Premier League</h1>
+
+    <label for="input">Escribe el nombre del equipo: </label>
+    <input type="text" id="input" placeholder="Arsenal">
+    <button type="button" id="enviar">Enviar</button>
+
+    <div id="informacion" class="container">
+        <p><b>Equipo:</b><span id="nombre"></span></p>
+        <p><b>Estadio:</b><span id="estadio"></span></p>
+        <p><b>Descripción:</b></p>
+        <p id="descripcion"></p>
+    </div>
+
+    <script type="text/javascript">
+
+    	$(document).ready(function() {
+    		$("#enviar").click(function() {
+        		let nombreEquipo = $("#input").val().trim();
+		        if (nombreEquipo !== "") {
+        		    obtenerInfo(nombreEquipo);
+        		} else {
+		            alert("Ingresa un nombre de un equipo de la Premier League");
+        		}
+    		});
+		});
+
+		function obtenerInfo(equipo) {
+            let url = `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${equipo}`;
+            $.get(url)
+                .done(function(data) {
+                    if (data.teams && data.teams.length > 0) {
+                        let info = data.teams[0];  
+                        $("#nombre").text(info.strTeam || "Nombre no encontrado");
+                        $("#estadio").text(info.strStadium || "Estadio no encontrado");
+                        $("#descripcion").text(info.strDescriptionEN || "Descripción no encontrada.");
+
+                        // Muestra el div de información
+                        $("#informacion").show();
+                    } else {
+                        alert("No se encontró información del equipo.");
+                    }
+                })
+        	.fail(function(xhr, status, error) {
+            	console.log(`Error: ${xhr.status} - ${error}`);
+            	alert("Error al obtener la información.");
+        	});
+		}
+    </script>
+</body>
+</html>
